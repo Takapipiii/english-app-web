@@ -4,7 +4,7 @@ import { speech } from '../utils/speech';
 
 const SWIPE_THRESHOLD = 90; // px needed to trigger a swipe
 
-export default function SwipeScreen({ onNavigate }) {
+export default function SwipeScreen({ onNavigate, selectedLevel }) {
   const [words, setWords] = useState([]);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
@@ -16,12 +16,25 @@ export default function SwipeScreen({ onNavigate }) {
   const startRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    const all = storage.loadWords();
+    const all      = storage.loadWords();
     const knownIds = storage.loadKnownIds();
-    const remaining = all.filter(w => !knownIds.includes(w.id));
-    setWords(remaining);
-    if (remaining.length === 0) setDone(true);
-  }, []);
+
+    let pool = all.filter(w => !knownIds.includes(w.id));
+
+    if (selectedLevel != null) {
+      // Filter to selected SVL level, sorted by their original index (in-order)
+      pool = pool
+        .filter(w => w.svlLevel === selectedLevel)
+        .sort((a, b) => {
+          const ai = parseInt(a.id.replace('svl_', '')) || 0;
+          const bi = parseInt(b.id.replace('svl_', '')) || 0;
+          return ai - bi;
+        });
+    }
+
+    setWords(pool);
+    if (pool.length === 0) setDone(true);
+  }, [selectedLevel]);
 
   const current = words[index];
 
@@ -107,9 +120,12 @@ export default function SwipeScreen({ onNavigate }) {
       <div className="screen center">
         <div className="done-box">
           <p className="done-emoji">🎉</p>
-          <h2>All done!</h2>
-          <p>You've gone through all remaining words.</p>
-          <button className="btn btn-primary" onClick={() => onNavigate('review')}>
+          <h2>{selectedLevel != null ? `Level ${selectedLevel} done!` : 'All done!'}</h2>
+          <p>You've gone through all the words{selectedLevel != null ? ` in Level ${selectedLevel}` : ''}.</p>
+          <button className="btn btn-primary" onClick={() => onNavigate('level-select')}>
+            {selectedLevel != null && selectedLevel < 12 ? `→ Try Level ${selectedLevel + 1}` : 'Choose Another Level'}
+          </button>
+          <button className="btn btn-secondary" onClick={() => onNavigate('review')}>
             Review Unknown Words
           </button>
           <button className="btn btn-ghost" onClick={() => onNavigate('home')}>
@@ -125,8 +141,10 @@ export default function SwipeScreen({ onNavigate }) {
   return (
     <div className="screen swipe-screen">
       <div className="swipe-header">
-        <button className="btn btn-ghost btn-sm" onClick={() => onNavigate('home')}>← Home</button>
-        <span className="swipe-progress">{index + 1} / {words.length}</span>
+        <button className="btn btn-ghost btn-sm" onClick={() => onNavigate('level-select')}>← Levels</button>
+        <span className="swipe-progress">
+          {selectedLevel != null ? `Lv.${selectedLevel}  ` : ''}{index + 1} / {words.length}
+        </span>
       </div>
 
       {/* Progress bar */}

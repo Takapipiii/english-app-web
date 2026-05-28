@@ -238,6 +238,103 @@ h1, h2, h3 { margin: 0; font-weight: 700; }
   padding: 14px;
 }
 
+/* ─── Level Select Screen ─── */
+.level-select-screen { gap: 12px; }
+
+.level-select-hint {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.level-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.level-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 2px solid;
+  text-align: left;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.level-card:hover, .level-card:active {
+  transform: scale(1.02);
+  box-shadow: var(--shadow);
+}
+
+.level-card-done { opacity: 0.65; }
+
+.level-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.level-card-num {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.level-card-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.8;
+}
+
+.level-card-badge {
+  font-size: 10px;
+  font-weight: 700;
+  background: #22c55e;
+  color: #fff;
+  border-radius: 10px;
+  padding: 1px 6px;
+}
+
+.level-card-bar-track {
+  height: 6px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-card-bar-known {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  border-radius: 3px;
+}
+
+.level-card-bar-unknown {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: #fca5a5;
+}
+
+.level-card-stats {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.level-all-btn {
+  align-self: center;
+  margin-top: 4px;
+}
+
 /* ─── Level progress ─── */
 .level-progress-section {
   background: var(--surface);
