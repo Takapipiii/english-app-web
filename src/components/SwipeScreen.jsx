@@ -110,6 +110,8 @@ export default function SwipeScreen({ onNavigate, selectedLevels }) {
     transition,
     opacity,
     cursor: drag.active ? 'grabbing' : 'grab',
+    // Pause entrance animation while dragging so it doesn't conflict
+    animationPlayState: drag.active ? 'paused' : 'running',
   };
 
   // Hint overlay
