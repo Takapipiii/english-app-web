@@ -58,4 +58,28 @@ export const storage = {
       remaining: Math.max(0, all.length - known.length - unknown.length),
     };
   },
+
+  getLevelProgress: () => {
+    const all     = JSON.parse(localStorage.getItem(KEYS.WORDS)   || '[]');
+    const knownIds = new Set(JSON.parse(localStorage.getItem(KEYS.KNOWN) || '[]'));
+    const unknownIds = new Set(
+      JSON.parse(localStorage.getItem(KEYS.UNKNOWN) || '[]').map(w => w.id)
+    );
+
+    // Group by svlLevel (1-12). Words without svlLevel are skipped.
+    const levels = {};
+    all.forEach(w => {
+      const lv = w.svlLevel;
+      if (!lv) return;
+      if (!levels[lv]) levels[lv] = { total: 0, known: 0, unknown: 0 };
+      levels[lv].total++;
+      if (knownIds.has(w.id))   levels[lv].known++;
+      else if (unknownIds.has(w.id)) levels[lv].unknown++;
+    });
+
+    // Return sorted array
+    return Object.entries(levels)
+      .sort((a, b) => Number(a[0]) - Number(b[0]))
+      .map(([lv, data]) => ({ level: Number(lv), ...data }));
+  },
 };

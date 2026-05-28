@@ -35,11 +35,12 @@ const parseSVL = (rows) => {
     const type    = POS_MAP[posTag] || 'word';
 
     return {
-      id: `svl_${i}`,
+      id:       `svl_${i}`,
       word,
-      meaning: posLine,   // keep full "【形】できる、有能な" string
+      meaning:  posLine,   // keep full "【形】できる、有能な" string
       type,
       level,
+      svlLevel: Number(r[1]) || 1,   // original 1-12 number
     };
   }).filter(w => w.word);
 };

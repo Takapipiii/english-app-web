@@ -238,6 +238,104 @@ h1, h2, h3 { margin: 0; font-weight: 700; }
   padding: 14px;
 }
 
+/* ─── Level progress ─── */
+.level-progress-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.level-progress-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin: 0;
+}
+
+.level-progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.level-row { display: flex; flex-direction: column; gap: 3px; }
+
+.level-row-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.level-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  width: 36px;
+}
+
+.level-stats {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.lv-known { font-weight: 700; color: #16a34a; }
+.lv-done-badge {
+  background: #16a34a;
+  color: #fff;
+  border-radius: 10px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 800;
+  margin-left: 4px;
+}
+
+.level-bar-track {
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.level-bar-known {
+  position: absolute;
+  top: 0; left: 0;
+  height: 100%;
+  background: #22c55e;
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.level-bar-unknown {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: #fca5a5;
+  transition: width 0.4s ease, left 0.4s ease;
+}
+
+.level-row-done .level-bar-track { background: #dcfce7; }
+
+.level-legend {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.legend-known    { color: #16a34a; font-weight: 600; }
+.legend-unknown  { color: #ef4444; font-weight: 600; }
+.legend-remaining { color: #94a3b8; font-weight: 600; }
+
 /* ─── SWIPE ─── */
 .swipe-screen { padding-bottom: 8px; }
 
