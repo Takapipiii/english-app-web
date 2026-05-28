@@ -4,7 +4,7 @@ const KEYS = {
   KNOWN: 'words_known',
   SENTENCES: 'sentences_cache',
   API_KEY: 'anthropic_api_key',
-  LAST_LEVEL: 'last_level',
+  SELECTED_LEVELS: 'selected_levels',
 };
 
 export const storage = {
@@ -46,11 +46,8 @@ export const storage = {
   getApiKey: () => localStorage.getItem(KEYS.API_KEY) || '',
   saveApiKey: (key) => localStorage.setItem(KEYS.API_KEY, key),
 
-  getLastLevel: () => {
-    const v = localStorage.getItem(KEYS.LAST_LEVEL);
-    return v !== null ? JSON.parse(v) : null;
-  },
-  saveLastLevel: (level) => localStorage.setItem(KEYS.LAST_LEVEL, JSON.stringify(level)),
+  getSelectedLevels: () => JSON.parse(localStorage.getItem(KEYS.SELECTED_LEVELS) || '[]'),
+  saveSelectedLevels: (levels) => localStorage.setItem(KEYS.SELECTED_LEVELS, JSON.stringify(levels)),
 
   clearAll: () => Object.values(KEYS).forEach(k => localStorage.removeItem(k)),
 

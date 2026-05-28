@@ -9,10 +9,10 @@ import ImportScreen from './components/ImportScreen';
 import './App.css';
 
 export default function App() {
-  const [screen, setScreen]               = useState('home');
-  const [selectedWord, setSelectedWord]   = useState(null);
-  const [selectedLevel, setSelectedLevel] = useState(null);
-  const [refreshKey, setRefreshKey]       = useState(0);
+  const [screen, setScreen]                 = useState('home');
+  const [selectedWord, setSelectedWord]     = useState(null);
+  const [selectedLevels, setSelectedLevels] = useState([]);
+  const [refreshKey, setRefreshKey]         = useState(0);
 
   const navigate = useCallback((s) => setScreen(s), []);
 
@@ -23,8 +23,8 @@ export default function App() {
 
   const refresh = () => setRefreshKey(n => n + 1);
 
-  const handleSelectLevel = (level) => {
-    setSelectedLevel(level);
+  const handleSelectLevels = (levels) => {
+    setSelectedLevels(levels);
     setScreen('swipe');
   };
 
@@ -43,9 +43,9 @@ export default function App() {
       case 'home':
         return <HomeScreen onNavigate={navigate} key={`home-${refreshKey}`} />;
       case 'level-select':
-        return <LevelSelectScreen onSelectLevel={handleSelectLevel} onNavigate={navigate} key={`ls-${refreshKey}`} />;
+        return <LevelSelectScreen onSelectLevels={handleSelectLevels} onNavigate={navigate} key={`ls-${refreshKey}`} />;
       case 'swipe':
-        return <SwipeScreen onNavigate={navigate} selectedLevel={selectedLevel} key={`swipe-${refreshKey}-${selectedLevel}`} />;
+        return <SwipeScreen onNavigate={navigate} selectedLevels={selectedLevels} key={`swipe-${refreshKey}-${selectedLevels.join(',')}`} />;
       case 'progress':
         return <ProgressScreen key={`progress-${refreshKey}`} />;
       case 'review':
