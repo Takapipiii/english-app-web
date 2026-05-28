@@ -9,7 +9,7 @@ import './App.css';
 export default function App() {
   const [screen, setScreen] = useState('home');
   const [selectedWord, setSelectedWord] = useState(null);
-  const [, forceUpdate] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   const navigate = useCallback((s) => setScreen(s), []);
 
@@ -18,7 +18,7 @@ export default function App() {
     setScreen('sentence');
   };
 
-  const refresh = () => forceUpdate(n => n + 1);
+  const refresh = () => setRefreshKey(n => n + 1);
 
   const tabs = [
     { id: 'home',   label: 'Home',   icon: '🏠' },
@@ -30,11 +30,11 @@ export default function App() {
   const renderScreen = () => {
     switch (screen) {
       case 'home':
-        return <HomeScreen onNavigate={navigate} key={screen} />;
+        return <HomeScreen onNavigate={navigate} key={`home-${refreshKey}`} />;
       case 'swipe':
-        return <SwipeScreen onNavigate={navigate} key={screen} />;
+        return <SwipeScreen onNavigate={navigate} key={`swipe-${refreshKey}`} />;
       case 'review':
-        return <ReviewScreen onNavigate={navigate} onOpenSentence={openSentence} key={screen} />;
+        return <ReviewScreen onNavigate={navigate} onOpenSentence={openSentence} key={`review-${refreshKey}`} />;
       case 'sentence':
         return <SentenceScreen word={selectedWord} onBack={() => setScreen('review')} key={selectedWord?.id} />;
       case 'import':
