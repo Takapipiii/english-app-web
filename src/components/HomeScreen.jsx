@@ -14,7 +14,7 @@ export default function HomeScreen({ onNavigate }) {
   return (
     <div className="screen home-screen">
       <div className="home-header">
-        <h1>🇺🇸 English Words</h1>
+        <h1>📚 English Words</h1>
         <p className="home-subtitle">Swipe to master your vocabulary</p>
       </div>
 
