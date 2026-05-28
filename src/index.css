@@ -99,7 +99,7 @@ h1, h2, h3 { margin: 0; font-weight: 700; }
 .nav-icon { font-size: 20px; }
 
 .nav-label {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -333,6 +333,99 @@ h1, h2, h3 { margin: 0; font-weight: 700; }
 .level-all-btn {
   align-self: center;
   margin-top: 4px;
+}
+
+/* Last-level continue banner */
+.last-level-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  gap: 12px;
+}
+
+.last-level-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #fff;
+}
+
+.last-level-label {
+  font-size: 11px;
+  opacity: 0.7;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  font-weight: 600;
+}
+
+.last-level-name {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.last-level-stats {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.last-level-banner .btn-primary {
+  background: #fff;
+  color: var(--primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.last-level-banner .btn-primary:hover { background: #e0e7ff; }
+
+/* Active (last used) level card */
+.level-card-active {
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.level-card-badge-last {
+  background: var(--primary) !important;
+}
+
+/* ─── Progress Screen ─── */
+.progress-screen { gap: 14px; }
+
+.overall-bar-wrap { padding: 0 2px; }
+
+.overall-bar-track {
+  height: 10px;
+  background: var(--border);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.overall-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4f46e5, #22c55e);
+  border-radius: 5px;
+  transition: width 0.5s ease;
+}
+
+.level-row-counts {
+  display: flex;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  padding-top: 2px;
+}
+
+.lc-known    { color: #16a34a; }
+.lc-unknown  { color: #ef4444; }
+.lc-remaining { color: #94a3b8; }
+
+.level-group-tag {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ─── Level progress ─── */

@@ -1,9 +1,9 @@
 import { storage } from '../utils/storage';
 
 const LEVEL_LABELS = {
-  1: 'Beginner',  2: 'Beginner',  3: 'Beginner',  4: 'Beginner',
-  5: 'Intermediate', 6: 'Intermediate', 7: 'Intermediate', 8: 'Intermediate',
-  9: 'Advanced', 10: 'Advanced', 11: 'Advanced', 12: 'Advanced',
+  1:'Beginner', 2:'Beginner', 3:'Beginner', 4:'Beginner',
+  5:'Intermediate', 6:'Intermediate', 7:'Intermediate', 8:'Intermediate',
+  9:'Advanced', 10:'Advanced', 11:'Advanced', 12:'Advanced',
 };
 
 const LEVEL_COLORS = {
@@ -13,10 +13,10 @@ const LEVEL_COLORS = {
 };
 
 export default function LevelSelectScreen({ onSelectLevel, onNavigate }) {
-  const progress = storage.getLevelProgress();
-  const stats    = storage.getStats();
+  const progress  = storage.getLevelProgress();
+  const lastLevel = storage.getLastLevel();
 
-  // If no SVL data, skip to regular swipe
+  // If no SVL data, skip straight to swipe (all words)
   if (progress.length === 0) {
     onSelectLevel(null);
     return null;
@@ -27,6 +27,15 @@ export default function LevelSelectScreen({ onSelectLevel, onNavigate }) {
     return LEVEL_COLORS[label.toLowerCase()] || LEVEL_COLORS.beginner;
   };
 
+  const handleSelect = (level) => {
+    storage.saveLastLevel(level);
+    onSelectLevel(level);
+  };
+
+  const lastLevelData = lastLevel != null
+    ? progress.find(p => p.level === lastLevel)
+    : null;
+
   return (
     <div className="screen level-select-screen">
       <div className="screen-header">
@@ -34,10 +43,32 @@ export default function LevelSelectScreen({ onSelectLevel, onNavigate }) {
         <h2>Choose a Level</h2>
       </div>
 
+      {/* ── Continue from last time ── */}
+      {lastLevelData && (
+        <div className="last-level-banner">
+          <div className="last-level-info">
+            <span className="last-level-label">Last studied</span>
+            <span className="last-level-name">
+              Level {lastLevel} · {LEVEL_LABELS[lastLevel]}
+            </span>
+            <span className="last-level-stats">
+              ✅ {lastLevelData.known} / {lastLevelData.total}
+            </span>
+          </div>
+          <button
+            className="btn btn-primary"
+            onClick={() => handleSelect(lastLevel)}
+          >
+            Continue →
+          </button>
+        </div>
+      )}
+
       <p className="level-select-hint">
-        Pick a level to study. Words appear in order within each level.
+        {lastLevel != null ? 'Or pick a different level:' : 'Pick a level to study. Words appear in order.'}
       </p>
 
+      {/* ── Level grid ── */}
       <div className="level-select-grid">
         {progress.map(({ level, total, known, unknown }) => {
           const remaining  = total - known - unknown;
@@ -45,22 +76,25 @@ export default function LevelSelectScreen({ onSelectLevel, onNavigate }) {
           const unknownPct = total ? (unknown / total) * 100 : 0;
           const done       = known === total && total > 0;
           const color      = getColor(level);
-          const label      = LEVEL_LABELS[level];
+          const isLast     = level === lastLevel;
 
           return (
             <button
               key={level}
-              className={`level-card ${done ? 'level-card-done' : ''}`}
-              style={{ background: color.bg, borderColor: color.border }}
-              onClick={() => onSelectLevel(level)}
+              className={`level-card ${done ? 'level-card-done' : ''} ${isLast ? 'level-card-active' : ''}`}
+              style={{ background: color.bg, borderColor: isLast ? color.text : color.border }}
+              onClick={() => handleSelect(level)}
             >
               <div className="level-card-top">
-                <span className="level-card-num" style={{ color: color.text }}>
-                  Lv.{level}
-                </span>
-                {done && <span className="level-card-badge">✓ Done</span>}
+                <span className="level-card-num" style={{ color: color.text }}>Lv.{level}</span>
+                {done
+                  ? <span className="level-card-badge">✓</span>
+                  : isLast
+                    ? <span className="level-card-badge level-card-badge-last">▶</span>
+                    : null
+                }
                 <span className="level-card-label" style={{ color: color.text }}>
-                  {label}
+                  {LEVEL_LABELS[level]}
                 </span>
               </div>
 
@@ -81,10 +115,7 @@ export default function LevelSelectScreen({ onSelectLevel, onNavigate }) {
         })}
       </div>
 
-      <button
-        className="btn btn-ghost btn-sm level-all-btn"
-        onClick={() => onSelectLevel(null)}
-      >
+      <button className="btn btn-ghost btn-sm level-all-btn" onClick={() => handleSelect(null)}>
         🔀 Shuffle all levels
       </button>
     </div>

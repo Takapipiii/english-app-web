@@ -4,14 +4,15 @@ import LevelSelectScreen from './components/LevelSelectScreen';
 import SwipeScreen from './components/SwipeScreen';
 import ReviewScreen from './components/ReviewScreen';
 import SentenceScreen from './components/SentenceScreen';
+import ProgressScreen from './components/ProgressScreen';
 import ImportScreen from './components/ImportScreen';
 import './App.css';
 
 export default function App() {
-  const [screen, setScreen]           = useState('home');
-  const [selectedWord, setSelectedWord] = useState(null);
+  const [screen, setScreen]               = useState('home');
+  const [selectedWord, setSelectedWord]   = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
-  const [refreshKey, setRefreshKey]   = useState(0);
+  const [refreshKey, setRefreshKey]       = useState(0);
 
   const navigate = useCallback((s) => setScreen(s), []);
 
@@ -28,10 +29,11 @@ export default function App() {
   };
 
   const tabs = [
-    { id: 'home',         label: 'Home',   icon: '🏠' },
-    { id: 'level-select', label: 'Swipe',  icon: '🃏' },
-    { id: 'review',       label: 'Review', icon: '📚' },
-    { id: 'import',       label: 'Data',   icon: '📂' },
+    { id: 'home',         label: 'Home',     icon: '🏠' },
+    { id: 'level-select', label: 'Swipe',    icon: '🃏' },
+    { id: 'progress',     label: 'Progress', icon: '📊' },
+    { id: 'review',       label: 'Review',   icon: '📚' },
+    { id: 'import',       label: 'Data',     icon: '📂' },
   ];
 
   const activeTab = screen === 'swipe' ? 'level-select' : screen;
@@ -44,6 +46,8 @@ export default function App() {
         return <LevelSelectScreen onSelectLevel={handleSelectLevel} onNavigate={navigate} key={`ls-${refreshKey}`} />;
       case 'swipe':
         return <SwipeScreen onNavigate={navigate} selectedLevel={selectedLevel} key={`swipe-${refreshKey}-${selectedLevel}`} />;
+      case 'progress':
+        return <ProgressScreen key={`progress-${refreshKey}`} />;
       case 'review':
         return <ReviewScreen onNavigate={navigate} onOpenSentence={openSentence} key={`review-${refreshKey}`} />;
       case 'sentence':
