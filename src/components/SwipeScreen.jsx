@@ -23,15 +23,12 @@ export default function SwipeScreen({ onNavigate, selectedLevels }) {
 
     if (selectedLevels && selectedLevels.length > 0) {
       const levelSet = new Set(selectedLevels);
-      pool = pool
-        .filter(w => levelSet.has(w.svlLevel))
-        .sort((a, b) => {
-          // Sort by level first, then by original word index within each level
-          if (a.svlLevel !== b.svlLevel) return a.svlLevel - b.svlLevel;
-          const ai = parseInt(a.id.replace('svl_', '')) || 0;
-          const bi = parseInt(b.id.replace('svl_', '')) || 0;
-          return ai - bi;
-        });
+      pool = pool.filter(w => levelSet.has(w.svlLevel));
+      // Fisher-Yates shuffle for random order
+      for (let i = pool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [pool[i], pool[j]] = [pool[j], pool[i]];
+      }
     }
 
     setWords(pool);
@@ -99,11 +96,15 @@ export default function SwipeScreen({ onNavigate, selectedLevels }) {
   };
 
   // Visual helpers
-  const rotation = drag.x * 0.10;
+  // Cap rotation at 15deg so the card doesn't spin wildly on fly-out
+  const rotation = Math.min(Math.abs(drag.x) * 0.08, 15) * Math.sign(drag.x || 1);
   const opacity = drag.flying ? 0 : 1;
+  // Different easing for fly-out vs snap-back
   const transition = drag.active
     ? 'none'
-    : 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s';
+    : drag.flying
+      ? 'transform 0.28s cubic-bezier(0.4, 0, 1, 1), opacity 0.22s ease-out'  // fast fly-out
+      : 'transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s'; // spring snap-back
 
   const cardStyle = {
     transform: `translateX(${drag.x}px) translateY(${drag.y * 0.3}px) rotate(${rotation}deg)`,
@@ -172,6 +173,7 @@ export default function SwipeScreen({ onNavigate, selectedLevels }) {
 
       <div className="swipe-area">
         <div
+          key={current.id}
           ref={cardRef}
           className={`word-card ${flipped ? 'flipped' : ''}`}
           style={cardStyle}

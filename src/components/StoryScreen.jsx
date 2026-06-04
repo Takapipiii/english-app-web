@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { storage } from '../utils/storage';
 import { generateStory } from '../utils/ai';
 
+
 function tokenizeStory(story, unknownWords) {
   // Sort longest phrases first so "get rid of" matches before "get"
   const sorted = [...unknownWords].sort((a, b) => b.word.length - a.word.length);
@@ -48,9 +49,7 @@ export default function StoryScreen() {
 
   const generate = async () => {
     const words = storage.loadUnknownWords().slice(0, 15);
-    const apiKey = storage.getApiKey();
 
-    if (!apiKey) { setError('No API key set. Go to Import / Settings.'); return; }
     if (words.length < 3) { setError('Swipe at least 3 words as "unknown" first.'); return; }
 
     setLoading(true);
@@ -59,7 +58,7 @@ export default function StoryScreen() {
     setSelectedWord(null);
 
     try {
-      const text = await generateStory(words, apiKey);
+      const text = await generateStory(words);
       setStory(text);
       setUnknownWords(words);
     } catch (e) {

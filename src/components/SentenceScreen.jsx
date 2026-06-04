@@ -12,23 +12,15 @@ export default function SentenceScreen({ word, onBack }) {
   useEffect(() => {
     if (!word) return;
     const cached = storage.getCachedSentence(word.id);
-    if (cached) {
-      setSentences(cached);
-    } else {
-      fetchSentences();
-    }
+    if (cached) setSentences(cached);
+    else fetchSentences();
   }, [word]);
 
   const fetchSentences = async () => {
-    const apiKey = storage.getApiKey();
-    if (!apiKey) {
-      setError('No API key set. Please add your Anthropic API key in Import / Settings.');
-      return;
-    }
     setLoading(true);
     setError('');
     try {
-      const result = await generateSentences(word.word, apiKey);
+      const result = await generateSentences(word.word);
       setSentences(result);
       storage.cacheSentence(word.id, result);
     } catch (e) {
@@ -39,7 +31,6 @@ export default function SentenceScreen({ word, onBack }) {
   };
 
   const speakSentence = (text, idx) => {
-    // Extract English part only (before Japanese in parentheses)
     const englishOnly = text.replace(/（[^）]*）/g, '').replace(/\([^)]*\)/g, '').trim();
     speech.speak(englishOnly);
     setSpeaking(idx);
@@ -98,12 +89,6 @@ export default function SentenceScreen({ word, onBack }) {
           <button className="btn btn-ghost btn-sm refresh-btn" onClick={fetchSentences}>
             🔄 Generate new sentences
           </button>
-        </div>
-      )}
-
-      {!loading && !error && sentences.length === 0 && !storage.getApiKey() && (
-        <div className="empty-state">
-          <p>Set your Anthropic API key in <strong>Import / Settings</strong> to generate AI sentences.</p>
         </div>
       )}
     </div>
