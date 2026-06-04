@@ -6,6 +6,7 @@ import ReviewScreen from './components/ReviewScreen';
 import SentenceScreen from './components/SentenceScreen';
 import ProgressScreen from './components/ProgressScreen';
 import ImportScreen from './components/ImportScreen';
+import StoryScreen from './components/StoryScreen';
 import './App.css';
 
 export default function App() {
@@ -31,7 +32,7 @@ export default function App() {
   const tabs = [
     { id: 'home',         label: 'Home',     icon: '🏠' },
     { id: 'level-select', label: 'Swipe',    icon: '🃏' },
-    { id: 'progress',     label: 'Progress', icon: '📊' },
+    { id: 'story',        label: 'Story',    icon: '📖' },
     { id: 'review',       label: 'Review',   icon: '📚' },
     { id: 'import',       label: 'Data',     icon: '📂' },
   ];
@@ -52,6 +53,8 @@ export default function App() {
         return <ReviewScreen onNavigate={navigate} onOpenSentence={openSentence} key={`review-${refreshKey}`} />;
       case 'sentence':
         return <SentenceScreen word={selectedWord} onBack={() => setScreen('review')} key={selectedWord?.id} />;
+      case 'story':
+        return <StoryScreen key={`story-${refreshKey}`} />;
       case 'import':
         return <ImportScreen onNavigate={navigate} onRefresh={refresh} key={screen} />;
       default:

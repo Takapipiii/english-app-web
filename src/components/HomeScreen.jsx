@@ -34,6 +34,9 @@ export default function HomeScreen({ onNavigate }) {
         <button className="btn btn-secondary btn-lg" onClick={() => onNavigate('review')}>
           📚 Review Unknown Words
         </button>
+        <button className="btn btn-secondary btn-lg" onClick={() => onNavigate('story')}>
+          📖 Story Mode
+        </button>
         <button className="btn btn-ghost btn-lg" onClick={() => onNavigate('import')}>
           📂 Import / Settings
         </button>
