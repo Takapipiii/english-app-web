@@ -6,7 +6,6 @@ import ReviewScreen from './components/ReviewScreen';
 import SentenceScreen from './components/SentenceScreen';
 import ProgressScreen from './components/ProgressScreen';
 import ImportScreen from './components/ImportScreen';
-import StoryScreen from './components/StoryScreen';
 import './App.css';
 
 export default function App() {
@@ -28,7 +27,6 @@ export default function App() {
     { id: 'level-select', label: 'Swipe',    icon: '🃏' },
     { id: 'sentence',     label: 'Sentence', icon: '✍️' },
     { id: 'review',       label: 'Review',   icon: '📚' },
-    { id: 'story',        label: 'Story',    icon: '📖' },
   ];
 
   const activeTab = screen === 'swipe' ? 'level-select' : screen;
@@ -47,8 +45,6 @@ export default function App() {
         return <ReviewScreen onNavigate={navigate} key={`review-${refreshKey}`} />;
       case 'sentence':
         return <SentenceScreen key={`sentence-${refreshKey}`} />;
-      case 'story':
-        return <StoryScreen key={`story-${refreshKey}`} />;
       case 'import':
         return <ImportScreen onNavigate={navigate} onRefresh={refresh} key={screen} />;
       default:
