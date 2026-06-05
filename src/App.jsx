@@ -11,16 +11,10 @@ import './App.css';
 
 export default function App() {
   const [screen, setScreen]                 = useState('home');
-  const [selectedWord, setSelectedWord]     = useState(null);
   const [selectedLevels, setSelectedLevels] = useState([]);
   const [refreshKey, setRefreshKey]         = useState(0);
 
   const navigate = useCallback((s) => setScreen(s), []);
-
-  const openSentence = (word) => {
-    setSelectedWord(word);
-    setScreen('sentence');
-  };
 
   const refresh = () => setRefreshKey(n => n + 1);
 
@@ -32,9 +26,9 @@ export default function App() {
   const tabs = [
     { id: 'home',         label: 'Home',     icon: '🏠' },
     { id: 'level-select', label: 'Swipe',    icon: '🃏' },
-    { id: 'story',        label: 'Story',    icon: '📖' },
+    { id: 'sentence',     label: 'Sentence', icon: '✍️' },
     { id: 'review',       label: 'Review',   icon: '📚' },
-    { id: 'import',       label: 'Data',     icon: '📂' },
+    { id: 'story',        label: 'Story',    icon: '📖' },
   ];
 
   const activeTab = screen === 'swipe' ? 'level-select' : screen;
@@ -50,9 +44,9 @@ export default function App() {
       case 'progress':
         return <ProgressScreen key={`progress-${refreshKey}`} />;
       case 'review':
-        return <ReviewScreen onNavigate={navigate} onOpenSentence={openSentence} key={`review-${refreshKey}`} />;
+        return <ReviewScreen onNavigate={navigate} key={`review-${refreshKey}`} />;
       case 'sentence':
-        return <SentenceScreen word={selectedWord} onBack={() => setScreen('review')} key={selectedWord?.id} />;
+        return <SentenceScreen key={`sentence-${refreshKey}`} />;
       case 'story':
         return <StoryScreen key={`story-${refreshKey}`} />;
       case 'import':
@@ -68,8 +62,7 @@ export default function App() {
         {renderScreen()}
       </div>
 
-      {screen !== 'sentence' && (
-        <nav className="bottom-nav">
+      <nav className="bottom-nav">
           {tabs.map(t => (
             <button
               key={t.id}
@@ -80,8 +73,7 @@ export default function App() {
               <span className="nav-label">{t.label}</span>
             </button>
           ))}
-        </nav>
-      )}
+      </nav>
     </div>
   );
 }

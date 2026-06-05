@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { storage } from '../utils/storage';
 import { speech } from '../utils/speech';
 
-export default function ReviewScreen({ onNavigate, onOpenSentence }) {
+export default function ReviewScreen({ onNavigate }) {
   const [words, setWords] = useState([]);
   const [search, setSearch] = useState('');
 
@@ -55,11 +55,7 @@ export default function ReviewScreen({ onNavigate, onOpenSentence }) {
                   title="Listen"
                   onClick={() => speech.speak(w.word)}
                 >🔊</button>
-                <button
-                  className="btn btn-icon"
-                  title="Example sentences"
-                  onClick={() => onOpenSentence(w)}
-                >📝</button>
+
                 <button
                   className="btn btn-icon btn-known-small"
                   title="Mark as known"

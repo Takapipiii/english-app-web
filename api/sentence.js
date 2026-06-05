@@ -1,21 +1,25 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { word } = req.body;
-  if (!word) return res.status(400).json({ error: 'word is required.' });
+  const { words } = req.body;
+  if (!words || !Array.isArray(words) || words.length < 2) {
+    return res.status(400).json({ error: 'words array (2-3 items) is required.' });
+  }
 
-  const prompt = `Generate 3 natural English example sentences using the word/phrase "${word}".
-For each sentence:
-1. Use it in a realistic, everyday context
-2. Keep sentences at intermediate level
-3. After each sentence, add a Japanese translation in parentheses
+  const wordList = words.join(', ');
+  const prompt = `Create ONE short, natural English sentence that uses ALL of these words: ${wordList}.
+
+Rules:
+- Use every word naturally in a single sentence
+- Keep it short and memorable (under 20 words)
+- Intermediate level English
+- Then provide a Japanese translation
 
 Format your response exactly like this:
-1. [English sentence] （[Japanese translation]）
-2. [English sentence] （[Japanese translation]）
-3. [English sentence] （[Japanese translation]）
+ENGLISH: [the sentence]
+JAPANESE: [Japanese translation]
 
-Only output the 3 numbered sentences, nothing else.`;
+Only output those two lines, nothing else.`;
 
   const response = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -26,7 +30,7 @@ Only output the 3 numbered sentences, nothing else.`;
     },
     body: JSON.stringify({
       model: 'claude-haiku-4-5',
-      max_tokens: 512,
+      max_tokens: 256,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
@@ -38,11 +42,16 @@ Only output the 3 numbered sentences, nothing else.`;
 
   const data = await response.json();
   const text = data.content[0].text.trim();
-  const lines = text
-    .split('\n')
-    .map(l => l.trim())
-    .filter(l => /^\d+\./.test(l))
-    .map(l => l.replace(/^\d+\.\s*/, ''));
 
-  res.json({ sentences: lines });
+  const englishMatch = text.match(/ENGLISH:\s*(.+)/i);
+  const japaneseMatch = text.match(/JAPANESE:\s*(.+)/i);
+
+  if (!englishMatch) {
+    return res.status(500).json({ error: 'Unexpected response format from AI.' });
+  }
+
+  res.json({
+    sentence: englishMatch[1].trim(),
+    translation: japaneseMatch ? japaneseMatch[1].trim() : '',
+  });
 }

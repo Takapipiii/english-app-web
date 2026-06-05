@@ -3,6 +3,8 @@ const KEYS = {
   UNKNOWN: 'words_unknown',
   KNOWN: 'words_known',
   SENTENCES: 'sentences_cache',
+  SAVED_SENTENCES: 'sentences_saved',
+  SHOW_JAPANESE: 'pref_show_japanese',
   API_KEY: 'anthropic_api_key',
   SELECTED_LEVELS: 'selected_levels',
 };
@@ -48,6 +50,22 @@ export const storage = {
 
   getSelectedLevels: () => JSON.parse(localStorage.getItem(KEYS.SELECTED_LEVELS) || '[]'),
   saveSelectedLevels: (levels) => localStorage.setItem(KEYS.SELECTED_LEVELS, JSON.stringify(levels)),
+
+  saveSentence: ({ words, sentence, translation }) => {
+    const list = JSON.parse(localStorage.getItem(KEYS.SAVED_SENTENCES) || '[]');
+    list.unshift({ id: Date.now(), words, sentence, translation, date: new Date().toISOString() });
+    localStorage.setItem(KEYS.SAVED_SENTENCES, JSON.stringify(list));
+  },
+
+  loadSavedSentences: () => JSON.parse(localStorage.getItem(KEYS.SAVED_SENTENCES) || '[]'),
+
+  deleteSavedSentence: (id) => {
+    const list = JSON.parse(localStorage.getItem(KEYS.SAVED_SENTENCES) || '[]');
+    localStorage.setItem(KEYS.SAVED_SENTENCES, JSON.stringify(list.filter(s => s.id !== id)));
+  },
+
+  getShowJapanese: () => localStorage.getItem(KEYS.SHOW_JAPANESE) === 'true',
+  saveShowJapanese: (val) => localStorage.setItem(KEYS.SHOW_JAPANESE, String(val)),
 
   clearAll: () => Object.values(KEYS).forEach(k => localStorage.removeItem(k)),
 
